@@ -1,0 +1,93 @@
+.customTable {
+  display: flex;
+  flex-direction: column;
+  overflow-x: scroll;
+  border-collapse: collapse;
+  height: 100vh;
+  overflow: auto;
+  thead {
+    background: rgb(164, 183, 209);
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.75rem;
+    }
+    th {
+      padding: 0;
+      border-right: 1px solid black;
+      border-left: 1px solid black;
+      border-top: 1px solid black;
+    }
+  }
+  tbody {
+    td {
+      padding: 0;
+      border: 1px solid black;
+      font-size: 0.75rem;
+      font-weight: 500;
+      > div {
+        text-overflow: ellipsis;
+        overflow: auto;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        > span {
+          text-overflow: ellipsis;
+          overflow: auto;
+          padding-left: 10px;
+        }
+      }
+    }
+  }
+  .resizableBox {
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    background: rgb(164, 183, 209);
+
+    .contentBox {
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+
+      justify-content: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      > div {
+        display: flex;
+      }
+      span {
+        width: auto;
+        text-align: left;
+        white-space: nowrap;
+        padding-left: 10px;
+      }
+    }
+    .resizeHandle {
+      cursor: col-resize;
+      width: 5px;
+    }
+  }
+  .active {
+    background: rgb(202, 209, 218);
+  }
+  .arrow-up {
+    width: 0;
+    margin: auto auto auto 0px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid black;
+  }
+
+  .arrow-down {
+    width: 0;
+    margin: auto auto auto 0px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+
+    border-top: 5px solid black;
+  }
+  .selectedColumn {
+    background: rgb(202, 209, 218);
+  }
+}

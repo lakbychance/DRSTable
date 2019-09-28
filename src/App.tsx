@@ -1,26 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
+import React from "react";
+import { DRSTable } from "./Table/Table";
+import { initialRows, initialColumns } from "./data";
+const App = () => (
+  <DRSTable
+    initialRows={initialRows}
+    initialColumns={initialColumns}
+    fixedWidth={window.screen.width}
+    minWidth={50}
+  />
+);
 export default App;
