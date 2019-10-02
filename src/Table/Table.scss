@@ -1,39 +1,26 @@
 .customTable {
-  display: flex;
-  flex-direction: column;
   overflow-x: scroll;
-  border-collapse: collapse;
   height: 100vh;
-  overflow: auto;
-  thead {
-    background: rgb(164, 183, 209);
-    span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-size: 0.75rem;
-    }
-    th {
-      padding: 0;
-      border-right: 1px solid black;
-      border-left: 1px solid black;
-      border-top: 1px solid black;
+  .thead {
+    display: inline-grid;
+    background: white;
+    grid-auto-flow: column;
+    > div {
+      border: 1px solid black;
     }
   }
-  tbody {
-    td {
-      padding: 0;
-      border: 1px solid black;
-      font-size: 0.75rem;
-      font-weight: 500;
+  .tbody {
+    > div {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 1fr);
+      grid-auto-flow: column;
       > div {
+        border: 1px solid black;
+        overflow: hidden;
         text-overflow: ellipsis;
-        overflow: auto;
         height: 50px;
-        display: flex;
-        align-items: center;
-        > span {
-          text-overflow: ellipsis;
-          overflow: auto;
+        white-space: nowrap;
+        span {
           padding-left: 10px;
         }
       }
@@ -43,6 +30,7 @@
     height: 50px;
     display: flex;
     justify-content: space-between;
+    order: 1px solid black;
     background: rgb(164, 183, 209);
 
     .contentBox {
