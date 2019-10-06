@@ -1,21 +1,25 @@
 .customTable {
-  overflow-x: scroll;
-  height: 100vh;
   .thead {
-    display: inline-grid;
+    display: inline-flex;
     background: white;
-    grid-auto-flow: column;
+    border-right: 1px solid black;
     > div {
-      border: 1px solid black;
+      border-left: 1px solid black;
+      border-top: 1px solid black;
+      border-bottom: 1px solid black;
     }
   }
   .tbody {
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
     > div {
       display: grid;
-      grid-template-columns: repeat(auto-fill, 1fr);
+      border-right: 1px solid black;
+      border-bottom: 1px solid black;
       grid-auto-flow: column;
       > div {
-        border: 1px solid black;
+        border-left: 1px solid black;
         overflow: hidden;
         text-overflow: ellipsis;
         height: 50px;
@@ -35,9 +39,8 @@
 
     .contentBox {
       display: flex;
-      width: 100%;
+      width: 90%;
       flex-direction: column;
-
       justify-content: center;
       overflow: hidden;
       text-overflow: ellipsis;

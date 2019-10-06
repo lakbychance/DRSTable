@@ -1,8 +1,19 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "./Table.scss";
-import { sortingHelper, draggingHelper, resizingHelper } from "./helper";
-export const DRSTable = (props: any) => {
+import "../Sortable/Sortable";
+import { draggingHelper, resizingHelper } from "./helper";
+import { Resizable } from "../Resizable/Resizable";
+import { Sortable } from "../Sortable/Sortable";
+interface IDRSTableProps {
+  initialRows: any[];
+  initialColumns: any[];
+  fixedWidth: number;
+  minWidth: number;
+}
+export const DRSTable: React.FunctionComponent<IDRSTableProps> = (
+  props: IDRSTableProps
+) => {
   const { initialRows, initialColumns, fixedWidth, minWidth } = props;
   const [columns, setColumns] = useState(
     initialColumns.map((column: any) => ({
@@ -10,20 +21,17 @@ export const DRSTable = (props: any) => {
       width: fixedWidth / initialColumns.length
     }))
   );
+  const resizingHelperForWidth = resizingHelper(fixedWidth);
   const [parentWidth, setParentWidth] = useState(fixedWidth);
   const [rows, setRows] = useState(initialRows);
   const [isAsc, setAscFlag] = useState(true);
   const [isDragDisabled, setDragDisabled] = useState(false);
   const [activeColumnn, setActiveColumn] = useState("");
-  const handleSorting = (sortingColumn: string) => {
-    let { isAscFlag, sortColumn, sortedRows } = sortingHelper(
-      rows,
-      sortingColumn,
-      isAsc
-    );
-    setRows(sortedRows);
-    setActiveColumn(sortColumn);
-    setAscFlag(isAscFlag);
+
+  const handleSorting = (sorter: any, column: any) => {
+    setRows([...rows].sort(sorter));
+    setAscFlag(!isAsc);
+    setActiveColumn(column);
   };
   const handleDragging = (result: any) => {
     let { updatedColumns, updatedRows }: any = draggingHelper(
@@ -34,21 +42,22 @@ export const DRSTable = (props: any) => {
     setColumns(updatedColumns);
     setRows(updatedRows);
   };
-  const handleResizing = (event: any, column: any, index: number) => {
-    resizingHelper(
-      fixedWidth,
-      parentWidth,
-      minWidth,
+  const handleResizing = (width: number, column: any, index: number) => {
+    let { updatedColumns, updatedParentWidth } = resizingHelperForWidth(
       columns,
-      setParentWidth,
-      setColumns
-    )(event, column, index);
+      width,
+      column,
+      index,
+      parentWidth
+    );
+    setColumns(updatedColumns);
+    setParentWidth(updatedParentWidth);
   };
   return (
     <DragDropContext onDragEnd={handleDragging}>
       <Droppable droppableId="droppable" direction="horizontal">
         {(provided, snapshot) => (
-          <div className="customTable">
+          <div className="customTable" style={{ width: `${parentWidth}px` }}>
             <div className="thead" ref={provided.innerRef}>
               {columns.map((column: any, index: any) => (
                 <Draggable
@@ -58,62 +67,31 @@ export const DRSTable = (props: any) => {
                   index={index}
                 >
                   {(provided, snapshot) => (
-                    <div
-                      className={
-                        activeColumnn === column.key
-                          ? "resizableBox active"
-                          : "resizableBox"
-                      }
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={{
-                        width: column.width,
-                        minWidth: minWidth,
-                        ...provided.draggableProps.style
-                      }}
+                    <Resizable
+                      isActive={activeColumnn === column.key}
+                      isMouseEventDisabled={isDragDisabled}
+                      setMouseEvents={setDragDisabled}
+                      column={column}
+                      minWidth={minWidth}
+                      parentWrapperProps={provided}
+                      index={index}
+                      onResize={handleResizing}
                     >
-                      <div
-                        onClick={e =>
-                          !snapshot.isDragging
-                            ? handleSorting(column.key)
-                            : e.preventDefault()
-                        }
-                        className="contentBox"
+                      <Sortable
+                        isSortingEnabled={!snapshot.isDragging}
+                        isActive={activeColumnn === column.key}
+                        sortSelector={column.key}
+                        isAsc={isAsc}
+                        onSorting={handleSorting}
                       >
-                        <div>
-                          <span>{column.name}</span>
-                          <div
-                            className={
-                              activeColumnn === column.key
-                                ? isAsc
-                                  ? "arrow-down"
-                                  : "arrow-up"
-                                : ""
-                            }
-                          />
-                        </div>
-                      </div>
-                      <div
-                        className="resizeHandle"
-                        onMouseDown={e => handleResizing(e, column, index)}
-                        onMouseOver={e =>
-                          isDragDisabled !== true
-                            ? setDragDisabled(true)
-                            : e.preventDefault()
-                        }
-                        onMouseLeave={e =>
-                          isDragDisabled !== false
-                            ? setDragDisabled(false)
-                            : e.preventDefault()
-                        }
-                      />
-                    </div>
+                        <span>{column.name}</span>
+                      </Sortable>
+                    </Resizable>
                   )}
                 </Draggable>
               ))}
             </div>
-            <div className="tbody" style={{ width: `${parentWidth}px` }}>
+            <div className="tbody">
               {rows.map((row: any) => (
                 <div>
                   {Object.keys(row).map((key: any, index: number) => (

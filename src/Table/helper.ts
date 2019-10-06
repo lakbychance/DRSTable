@@ -1,20 +1,4 @@
 //The helper for dragging logic
-const sortingHelper = (rows: any, sortColumn: string, isAsc: boolean) => {
-  let sortedRows = sortRows(rows, sortColumn, isAsc ? "ASC" : "DESC");
-  let isAscFlag = !isAsc;
-  return { sortedRows, sortColumn, isAscFlag };
-};
-const sortRows = (rows: any, sortColumn: any, sortDirection: string) => {
-  const comparer: any = (a: any, b: any) => {
-    if (sortDirection === "ASC") {
-      return a[sortColumn] > b[sortColumn] ? 1 : -1;
-    } else if (sortDirection === "DESC") {
-      return a[sortColumn] < b[sortColumn] ? 1 : -1;
-    }
-  };
-  return sortDirection === "NONE" ? rows : [...rows].sort(comparer);
-};
-//The helper for dragging logic
 const draggingHelper = (columns: any, rows: any, result: any) => {
   //removes column from starting index and puts it into the ending index of the columns array
   const reorderColumns = (
@@ -49,8 +33,8 @@ const draggingHelper = (columns: any, rows: any, result: any) => {
     });
     return updatedRows;
   };
-  //if dragged column is dropped out of list
 
+  //if dragged column is dropped out of list
   if (!result.destination) {
     return { updatedColumns: columns, updatedRows: rows };
   }
@@ -67,52 +51,27 @@ const draggingHelper = (columns: any, rows: any, result: any) => {
   return { updatedColumns, updatedRows };
 };
 //The helper for resizing logic
-const resizingHelper = (
-  fixedWidth: number,
-  parentWidth: number,
-  minWidth: number,
-  columns: any,
-  setParentWidth: any,
-  setColums: any
-) => {
-  return (event: any, column: any, index: number) => {
-    /*The logic for calculating new column header width on resizing. 
-      No state updates here.*/
-    const resize = (e: any) => {
-      e.clientX - targetDiv.getBoundingClientRect().left >= minWidth
-        ? (targetDiv.style.width = `${e.clientX -
-            targetDiv.getBoundingClientRect().left}px`)
-        : (targetDiv.style.width = `${minWidth}px`);
-    };
-    /*The logic for calculating new column header width when resizing stops. 
-      State updates here.*/
-    const stopResize = (e: any) => {
-      let width: number =
-        e.clientX - targetDiv.getBoundingClientRect().left >= minWidth
-          ? e.clientX - targetDiv.getBoundingClientRect().left
-          : minWidth;
-      let updatedColumns = [...columns];
-      updatedColumns[index] = { ...column, width };
-      let updatedParentWidth = parentWidth;
-      updatedParentWidth -= column.width;
-      updatedParentWidth += width;
-      if (updatedParentWidth < fixedWidth) {
-        updatedColumns.map((col: any) => {
-          if (col.key !== column.key)
-            col.width +=
-              (fixedWidth - updatedParentWidth) / (columns.length - 1);
-        });
-        updatedParentWidth = fixedWidth;
-      }
-      window.removeEventListener("mousemove", resize);
-      window.removeEventListener("mouseup", stopResize);
-      setParentWidth(updatedParentWidth);
-      setColums(updatedColumns);
-    };
-    window.addEventListener("mousemove", resize);
-    window.addEventListener("mouseup", stopResize);
-    let resizeHandle = event.target;
-    let targetDiv = resizeHandle.parentNode;
+const resizingHelper = (fixedWidth: number) => {
+  return (
+    columns: any,
+    width: number,
+    column: any,
+    index: number,
+    parentWidth: number
+  ) => {
+    let updatedColumns = [...columns];
+    updatedColumns[index] = { ...column, width };
+    let updatedParentWidth = parentWidth;
+    updatedParentWidth -= column.width;
+    updatedParentWidth += width;
+    if (updatedParentWidth < fixedWidth) {
+      updatedColumns.map((col: any) => {
+        if (col.key !== column.key)
+          col.width += (fixedWidth - updatedParentWidth) / (columns.length - 1);
+      });
+      updatedParentWidth = fixedWidth;
+    }
+    return { updatedParentWidth, updatedColumns };
   };
 };
-export { sortingHelper, draggingHelper, resizingHelper };
+export { draggingHelper, resizingHelper };
