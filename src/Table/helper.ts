@@ -1,24 +1,16 @@
 //The helper for dragging logic
 const draggingHelper = (columns: any, rows: any, result: any) => {
   //removes column from starting index and puts it into the ending index of the columns array
-  const reorderColumns = (
-    tableColumns: any,
-    startIndex: number,
-    endIndex: number
-  ) => {
-    const result = [...tableColumns];
+  const reorderColumns = (startIndex: number, endIndex: number) => {
+    const result = [...columns];
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
     return result;
   };
   /*iterates over all the rows of the table and removes ith row's draggedColumn key:value pair from starting index and puts it 
     into the ending index of the row object*/
-  const reorderRows = (
-    tableRows: any,
-    startIndex: number,
-    endIndex: number
-  ) => {
-    let updatedRows = tableRows.map((row: any) => {
+  const reorderRows = (startIndex: number, endIndex: number) => {
+    let updatedRows = rows.map((row: any) => {
       let rowKeys = Object.keys(row);
       let rowValues = Object.values(row);
       let [removedKey] = rowKeys.splice(startIndex, 1);
@@ -26,7 +18,7 @@ const draggingHelper = (columns: any, rows: any, result: any) => {
       let [removedValue] = rowValues.splice(startIndex, 1);
       rowValues.splice(endIndex, 0, removedValue);
       let updatedRow: any = {};
-      rowKeys.map((rowKey, index) => {
+      rowKeys.forEach((rowKey, index) => {
         updatedRow[rowKey] = rowValues[index];
       });
       return updatedRow;
@@ -39,12 +31,10 @@ const draggingHelper = (columns: any, rows: any, result: any) => {
     return { updatedColumns: columns, updatedRows: rows };
   }
   const updatedColumns: any = reorderColumns(
-    columns,
     result.source.index,
     result.destination.index
   );
   const updatedRows: any = reorderRows(
-    rows,
     result.source.index,
     result.destination.index
   );
@@ -65,7 +55,7 @@ const resizingHelper = (fixedWidth: number) => {
     updatedParentWidth -= column.width;
     updatedParentWidth += width;
     if (updatedParentWidth < fixedWidth) {
-      updatedColumns.map((col: any) => {
+      updatedColumns.forEach((col: any) => {
         if (col.key !== column.key)
           col.width += (fixedWidth - updatedParentWidth) / (columns.length - 1);
       });

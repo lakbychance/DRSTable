@@ -1,12 +1,14 @@
-.customTable {
+.drsTable {
   .thead {
-    display: inline-flex;
-    background: white;
-    border-right: 1px solid black;
     > div {
-      border-left: 1px solid black;
-      border-top: 1px solid black;
-      border-bottom: 1px solid black;
+      display: inline-flex;
+      background: white;
+      border-right: 1px solid black;
+      > div {
+        border-left: 1px solid black;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+      }
     }
   }
   .tbody {
@@ -34,7 +36,6 @@
     height: 50px;
     display: flex;
     justify-content: space-between;
-    order: 1px solid black;
     background: rgb(164, 183, 209);
 
     .contentBox {
@@ -75,10 +76,6 @@
     margin: auto auto auto 0px;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-
     border-top: 5px solid black;
-  }
-  .selectedColumn {
-    background: rgb(202, 209, 218);
   }
 }

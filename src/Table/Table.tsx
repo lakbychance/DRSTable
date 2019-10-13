@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "./Table.scss";
-import "../Sortable/Sortable";
+import { orderBy } from "lodash";
 import { draggingHelper, resizingHelper } from "./helper";
 import { Resizable } from "../Resizable/Resizable";
-import { Sortable } from "../Sortable/Sortable";
 interface IDRSTableProps {
   initialRows: any[];
   initialColumns: any[];
   fixedWidth: number;
   minWidth: number;
 }
+
 export const DRSTable: React.FunctionComponent<IDRSTableProps> = (
   props: IDRSTableProps
 ) => {
@@ -21,15 +21,15 @@ export const DRSTable: React.FunctionComponent<IDRSTableProps> = (
       width: fixedWidth / initialColumns.length
     }))
   );
-  const resizingHelperForWidth = resizingHelper(fixedWidth);
-  const [parentWidth, setParentWidth] = useState(fixedWidth);
   const [rows, setRows] = useState(initialRows);
+  const [parentWidth, setParentWidth] = useState(fixedWidth);
   const [isAsc, setAscFlag] = useState(true);
   const [isDragDisabled, setDragDisabled] = useState(false);
-  const [activeColumnn, setActiveColumn] = useState("");
-
-  const handleSorting = (sorter: any, column: any) => {
-    setRows([...rows].sort(sorter));
+  const [activeColumn, setActiveColumn] = useState("");
+  const resizingHelperForWidth = resizingHelper(fixedWidth);
+  const handleSorting = (column: string) => {
+    const sortedRows = orderBy(rows, [column], isAsc ? "asc" : "desc");
+    setRows(sortedRows);
     setAscFlag(!isAsc);
     setActiveColumn(column);
   };
@@ -54,60 +54,75 @@ export const DRSTable: React.FunctionComponent<IDRSTableProps> = (
     setParentWidth(updatedParentWidth);
   };
   return (
-    <DragDropContext onDragEnd={handleDragging}>
-      <Droppable droppableId="droppable" direction="horizontal">
-        {(provided, snapshot) => (
-          <div className="customTable" style={{ width: `${parentWidth}px` }}>
-            <div className="thead" ref={provided.innerRef}>
-              {columns.map((column: any, index: any) => (
-                <Draggable
-                  key={column.key}
-                  draggableId={column.key}
-                  isDragDisabled={isDragDisabled}
-                  index={index}
-                >
-                  {(provided, snapshot) => (
-                    <Resizable
-                      isActive={activeColumnn === column.key}
-                      isMouseEventDisabled={isDragDisabled}
-                      setMouseEvents={setDragDisabled}
-                      column={column}
-                      minWidth={minWidth}
-                      parentWrapperProps={provided}
-                      index={index}
-                      onResize={handleResizing}
-                    >
-                      <Sortable
-                        isSortingEnabled={!snapshot.isDragging}
-                        isActive={activeColumnn === column.key}
-                        sortSelector={column.key}
-                        isAsc={isAsc}
-                        onSorting={handleSorting}
+    <div className="drsTable" style={{ width: `${parentWidth}px` }}>
+      <div className="thead">
+        <DragDropContext onDragEnd={handleDragging}>
+          <Droppable droppableId="droppable" direction="horizontal">
+            {provided => (
+              <div ref={provided.innerRef}>
+                {columns.map((column: any, index: number) => (
+                  <Draggable
+                    key={column.key}
+                    draggableId={column.key}
+                    isDragDisabled={isDragDisabled}
+                    index={index}
+                  >
+                    {provided => (
+                      <Resizable
+                        isActive={activeColumn === column.key}
+                        isMouseEventDisabled={isDragDisabled}
+                        setMouseEvents={setDragDisabled}
+                        column={column}
+                        minWidth={minWidth}
+                        parentWrapperProps={provided}
+                        index={index}
+                        onResize={handleResizing}
                       >
-                        <span>{column.name}</span>
-                      </Sortable>
-                    </Resizable>
-                  )}
-                </Draggable>
-              ))}
-            </div>
-            <div className="tbody">
-              {rows.map((row: any) => (
-                <div>
-                  {Object.keys(row).map((key: any, index: number) => (
-                    <div
-                      style={{ width: `${columns[index].width}px` }}
-                      className={activeColumnn === key ? "selectedColumn" : ""}
-                    >
-                      <span>{row[key]}</span>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
+                        <div
+                          onClick={e =>
+                            !isDragDisabled
+                              ? handleSorting(column.key)
+                              : e.preventDefault()
+                          }
+                          className="contentBox"
+                        >
+                          <div>
+                            <span>{column.name}</span>
+                            <div
+                              className={
+                                activeColumn === column.key
+                                  ? isAsc
+                                    ? "arrow-down"
+                                    : "arrow-up"
+                                  : "noarrow"
+                              }
+                            />
+                          </div>
+                        </div>
+                      </Resizable>
+                    )}
+                  </Draggable>
+                ))}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
+      <div className="tbody">
+        {rows.map((row: any) => (
+          <div key={row.col1}>
+            {Object.keys(row).map((key: any, index: number) => (
+              <div
+                key={`${row.col1}${index}`}
+                style={{ width: `${columns[index].width}px` }}
+                className={activeColumn === key ? "rowData active" : "rowData"}
+              >
+                <span>{row[key]}</span>
+              </div>
+            ))}
           </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+        ))}
+      </div>
+    </div>
   );
 };

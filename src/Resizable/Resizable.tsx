@@ -1,5 +1,4 @@
-import React, { useEffect, ReactChildren } from "react";
-import { resizingHelper } from "Table/helper";
+import React from "react";
 interface IResizableProps {
   children: any;
   isActive?: boolean;

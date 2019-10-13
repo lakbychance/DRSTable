@@ -2,7 +2,7 @@ import faker from "faker";
 const initialRows: any = [];
 for (let i = 0; i < 30; i++) {
   initialRows.push({
-    col1: faker.name.firstName(),
+    col1: faker.random.alphaNumeric(8),
     col2: faker.name.lastName(),
     col3: faker.address.city(),
     col4: faker.name.jobTitle(),
@@ -12,11 +12,7 @@ for (let i = 0; i < 30; i++) {
   });
 }
 const initialColumns = [
-  {
-    id: 1,
-    key: "col1",
-    name: "Col1"
-  },
+  { key: "col1", name: "Col1" },
   { key: "col2", name: "Col2" },
   { key: "col3", name: "Col3" },
   { key: "col4", name: "Col4" },
