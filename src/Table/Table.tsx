@@ -110,10 +110,9 @@ export const DRSTable: React.FunctionComponent<IDRSTableProps> = (
       </div>
       <div className="tbody">
         {rows.map((row: any) => (
-          <div key={row.col1}>
+          <div>
             {Object.keys(row).map((key: any, index: number) => (
               <div
-                key={`${row.col1}${index}`}
                 style={{ width: `${columns[index].width}px` }}
                 className={activeColumn === key ? "rowData active" : "rowData"}
               >
