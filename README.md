@@ -39,7 +39,7 @@ const chosenWidth = 1000
 const minimumWidth = 40
 ```
 
-**So the usage of componenet will look like:**
+**So the usage of component will look like:**
 
 ```javascript
 <DRSTable 
