@@ -2,66 +2,63 @@
   .thead {
     > div {
       display: inline-flex;
-      background: white;
-      border-right: 1px solid black;
       > div {
         border-left: 1px solid black;
         border-top: 1px solid black;
         border-bottom: 1px solid black;
+        border-right: 1px solid black;
+        background: rgb(217, 218, 216);
       }
     }
   }
   .tbody {
     height: 100vh;
+    display: inline-flex;
+    flex-direction: column;
     overflow-y: scroll;
     overflow-x: hidden;
     > div {
       display: grid;
-      border-right: 1px solid black;
-      border-bottom: 1px solid black;
       grid-auto-flow: column;
       > div {
         border-left: 1px solid black;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        border-right: 1px solid black;
         overflow: hidden;
         text-overflow: ellipsis;
         height: 50px;
         white-space: nowrap;
-        span {
+        div {
+          height: 100%;
           padding-left: 10px;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
   }
-  .resizableBox {
-    height: 50px;
+  .contentBox {
     display: flex;
-    justify-content: space-between;
-    background: rgb(164, 183, 209);
-
-    .contentBox {
+    width: 90%;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    > div {
       display: flex;
-      width: 90%;
-      flex-direction: column;
-      justify-content: center;
+    }
+    span {
+      width: auto;
+      text-align: left;
+      white-space: nowrap;
+      padding-left: 10px;
       overflow: hidden;
       text-overflow: ellipsis;
-      > div {
-        display: flex;
-      }
-      span {
-        width: auto;
-        text-align: left;
-        white-space: nowrap;
-        padding-left: 10px;
-      }
-    }
-    .resizeHandle {
-      cursor: col-resize;
-      width: 5px;
     }
   }
   .active {
-    background: rgb(202, 209, 218);
+    background: rgb(202, 209, 218) !important;
   }
   .arrow-up {
     width: 0;

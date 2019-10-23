@@ -1,4 +1,5 @@
 import React from "react";
+import "./Resizable.scss";
 interface IResizableProps {
   children: any;
   isActive?: boolean;
@@ -25,8 +26,7 @@ export const Resizable: React.FunctionComponent<IResizableProps> = (
     onResize
   } = props;
   const handleResizing = (event: any, column: any, index: number) => {
-    /*The logic for calculating new column header width on resizing. 
-        No state updates here.*/
+    /*The logic for calculating new column header width on resizing. */
     const resize = (e: any) => {
       e.clientX - targetDiv.getBoundingClientRect().left >= minWidth
         ? (targetDiv.style.width = `${e.clientX -
@@ -41,6 +41,7 @@ export const Resizable: React.FunctionComponent<IResizableProps> = (
           : minWidth;
       window.removeEventListener("mousemove", resize);
       window.removeEventListener("mouseup", stopResize);
+      //Call to the onResize handler to pass updated width to the parent componenet
       onResize(width, column, index);
     };
     window.addEventListener("mousemove", resize);

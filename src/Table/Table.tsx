@@ -28,7 +28,11 @@ export const DRSTable: React.FunctionComponent<IDRSTableProps> = (
   const [activeColumn, setActiveColumn] = useState("");
   const resizingHelperForWidth = resizingHelper(fixedWidth);
   const handleSorting = (column: string) => {
-    const sortedRows = orderBy(rows, [column], isAsc ? "asc" : "desc");
+    const sortedRows = orderBy(
+      rows,
+      row => row[column].content,
+      isAsc ? "asc" : "desc"
+    );
     setRows(sortedRows);
     setAscFlag(!isAsc);
     setActiveColumn(column);
@@ -109,14 +113,15 @@ export const DRSTable: React.FunctionComponent<IDRSTableProps> = (
         </DragDropContext>
       </div>
       <div className="tbody">
-        {rows.map((row: any) => (
-          <div>
+        {rows.map((row: any, index: number) => (
+          <div key={index}>
             {Object.keys(row).map((key: any, index: number) => (
               <div
+                key={index}
                 style={{ width: `${columns[index].width}px` }}
                 className={activeColumn === key ? "rowData active" : "rowData"}
               >
-                <span>{row[key]}</span>
+                <div style={row[key].style}>{row[key].content}</div>
               </div>
             ))}
           </div>

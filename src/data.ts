@@ -2,13 +2,26 @@ import faker from "faker";
 const initialRows: any = [];
 for (let i = 0; i < 30; i++) {
   initialRows.push({
-    col1: faker.random.alphaNumeric(8),
-    col2: faker.name.lastName(),
-    col3: faker.address.city(),
-    col4: faker.name.jobTitle(),
-    col5: faker.finance.account(),
-    col6: faker.internet.email(),
-    col7: faker.company.companyName()
+    col1: {
+      content: faker.random.alphaNumeric(8),
+      style: {
+        color: "brown",
+        fontWeight: "bold"
+      }
+    },
+    col2: {
+      content: faker.name.lastName(),
+      style: {
+        color: "blue"
+      }
+    },
+    col3: { content: faker.address.city() },
+    col4: {
+      content: faker.name.jobTitle()
+    },
+    col5: { content: faker.finance.account() },
+    col6: { content: faker.internet.email() },
+    col7: { content: faker.company.companyName() }
   });
 }
 const initialColumns = [
